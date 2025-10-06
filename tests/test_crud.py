@@ -55,3 +55,5 @@ def test_delete_book(db_session):
 
     deleted_book = db_session.query(Book).filter_by(isbn="ISBNDEL").first()
     assert deleted_book.BookAvl == 1
+
+

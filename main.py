@@ -116,3 +116,7 @@ def delete_loan(loan_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Loan not found")
     return db_loan
 
+#audit tables
+@app.get("/audit/")
+def audit_record(db: Session = Depends(get_db)):
+    return crud.audit_record(db=db)

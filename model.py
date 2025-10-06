@@ -1,5 +1,5 @@
 from sqlalchemy.orm import relationship, declarative_base
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Enum as SAEnum
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum as SAEnum,func
 from datetime import datetime, timedelta, timezone
 from enum import Enum as pyEnum
 
@@ -56,3 +56,14 @@ class Loan(Base):
     # Relationships
     user = relationship("User", back_populates="loans")
     book = relationship("Book", back_populates="loans")
+
+class Audit(Base):
+    __tablename__ = "audits"
+    id = Column(Integer, primary_key=True)
+    total_users = Column(Integer, nullable=False)
+    total_books = Column(Integer, nullable=False)
+    total_loans = Column(Integer, nullable=False)
+    active_loans = Column(Integer, nullable=False)
+    non_active_users = Column(Integer, nullable=False)
+    removed_books = Column(Integer, nullable=False)
+    audit_date = Column(DateTime(timezone=True), server_default=func.now())
