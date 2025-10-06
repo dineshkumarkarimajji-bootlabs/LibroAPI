@@ -1,14 +1,9 @@
-from sqlalchemy.orm import relationship
-
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
-
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Enum as SAEnum
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from enum import Enum as pyEnum
 
-
-
+# Base class for models
 Base = declarative_base()
 
 # Enum for Loan Status
@@ -20,7 +15,6 @@ class LoanStatus(pyEnum):
 # Book Table
 class Book(Base):
     __tablename__ = "Books"
-    
 
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
@@ -30,8 +24,10 @@ class Book(Base):
     total_copies = Column(Integer, nullable=False, default=1)
     available_copies = Column(Integer, nullable=False, default=1)
     BookAvl = Column(Integer, default=0)  # 0 = active, 1 = deleted
+
     # Relationship: One book can have many loans
     loans = relationship("Loan", back_populates="book")
+
 # User Table
 class User(Base):
     __tablename__ = "Users"
@@ -40,6 +36,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     Membership = Column(Integer, default=0)  # 0 = active, 1 = deleted
+
     # Relationship: One user can have many loans
     loans = relationship("Loan", back_populates="user")
 
@@ -50,12 +47,12 @@ class Loan(Base):
     id = Column(Integer, primary_key=True)
     book_id = Column(Integer, ForeignKey("Books.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("Users.id"), nullable=False)
-    borrow_date = Column(DateTime, default=datetime.utcnow, nullable=False)
-    due_date = Column(DateTime, default=lambda: datetime.utcnow() + timedelta(weeks=2), nullable=False)
-    return_date = Column(DateTime, nullable=True)  # nullable=True to allow not-yet-returned books
+    borrow_date = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    due_date = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc) + timedelta(weeks=2), nullable=False)
+    return_date = Column(DateTime(timezone=True), nullable=True)  # nullable=True to allow not-yet-returned books
     status = Column(SAEnum(LoanStatus), default=LoanStatus.borrowed, nullable=False)
     Softdelete = Column(Integer, default=0)  # 0 = active, 1 = deleted
 
     # Relationships
-    user = relationship("User")
-    book = relationship("Book")
+    user = relationship("User", back_populates="loans")
+    book = relationship("Book", back_populates="loans")
