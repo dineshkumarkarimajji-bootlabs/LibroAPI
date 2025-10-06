@@ -32,7 +32,7 @@ def read_book(book_id: int, db: Session = Depends(get_db)):
 
 # Get all books
 @app.get("/books/", response_model=list[schemas.Book])
-def read_books(skip: int = 0, limit: int = 0, db: Session = Depends(get_db)):
+def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     books = crud.get_books(db, skip=skip, limit=limit)
     return books
 
@@ -65,7 +65,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 # Get all users
 @app.get("/users/", response_model=list[schemas.User])
-def read_users(skip: int = 0, limit: int = 0, db: Session = Depends(get_db)):
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
@@ -79,7 +79,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
 # get all loans
 @app.get("/loans/", response_model=list[schemas.Loan])
-def read_loans(skip: int = 0, limit: int = 0, db: Session = Depends(get_db)):
+def read_loans(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     loans = crud.get_loans(db, skip=skip, limit=limit)
     return loans
 
@@ -115,3 +115,4 @@ def delete_loan(loan_id: int, db: Session = Depends(get_db)):
     if db_loan is None:
         raise HTTPException(status_code=404, detail="Loan not found")
     return db_loan
+
