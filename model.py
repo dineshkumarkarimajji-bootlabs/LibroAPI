@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum as SA
 from datetime import datetime, timedelta, timezone
 from enum import Enum as pyEnum
 
-# Base class for models
+# Base class for models.SQLAlchemy uses it to collect table metadata and mappings.
 Base = declarative_base()
 
 # Enum for Loan Status

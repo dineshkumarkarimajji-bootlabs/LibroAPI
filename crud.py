@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 import model, schemas
 from sqlalchemy import func
-from datetime import datetime,timedelta,timezone
+from datetime import datetime,timezone
 
 # Create a new book
 def create_book(db: Session, book: schemas.BookCreate):
