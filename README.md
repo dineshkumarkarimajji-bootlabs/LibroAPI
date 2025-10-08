@@ -105,27 +105,49 @@ Run Alembic migrations:
 5.1 Books
 Method	Endpoint	Description
 POST	/books/	Create a new book
+
 GET	/books/{book_id}	Get a specific book
+
 GET	/books/	List all books (pagination supported)
+
 PUT	/books/{book_id}	Update book details
+
 DELETE	/books/{book_id}	Soft delete a book
+
 POST	/books/{book_id}/borrow	Borrow a book (transactional)
+
 5.2 Users
+
 Method	Endpoint	Description
+
 POST	/users/	Create a new user
+
 GET	/users/{user_id}	Get user by ID
+
 GET	/users/	List all users
+
 DELETE	/users/{user_id}	Soft delete a user
+
 5.3 Loans
+
 Method	Endpoint	Description
+
 GET	/loans/	List loans (filterable)
+
 GET	/loans/{loan_id}	Get loan by ID
+
 POST	/loans/{loan_id}/return	Return a borrowed book (transactional)
+
 DELETE	/loans/{loan_id}	Soft delete a loan
+
 5.4 Audit
+
 Method	Endpoint	Description
+
 GET	/audit/	Create and view audit records
+
 6. Testing
+   
 6.1 Setup
 
 Tests use in-memory SQLite for isolation and speed
@@ -133,8 +155,8 @@ Tests use in-memory SQLite for isolation and speed
 conftest.py provides test database sessions and FastAPI TestClient
 
 6.2 Run Tests
-pytest
 
+pytest
 
 Testing covers:
 
