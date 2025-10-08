@@ -4,27 +4,40 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from model import Base, Book, User, Loan  # adjust import if your model is in another folder
+from model import Base
+from fastapi.testclient import TestClient
+from main import app
+from config import get_db
 
 # Use in-memory SQLite database for testing
-TEST_DATABASE_URL = "sqlite:///:memory:"
+TEST_DATABASE_URL = "sqlite:///memory.db"
+engine = create_engine(TEST_DATABASE_URL)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@pytest.fixture(scope="session")
-def engine():
-    engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
-    # Create all tables in the test database
-    Base.metadata.create_all(bind=engine)
-    return engine
+# Create all tables in the test database
+Base.metadata.create_all(bind=engine)
 
+# Dependency override for FastAPI
+def override_get_db():
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+app.dependency_overrides[get_db] = override_get_db
+
+# Fixture for API tests
 @pytest.fixture(scope="function")
-def db_session(engine):
-    """Creates a new database session for a test."""
-    connection = engine.connect()
-    transaction = connection.begin()
-    Session = sessionmaker(bind=connection)
-    session = Session()
-    yield session
-    session.close()
-    transaction.rollback()
-    connection.close()
+def client():
+    client_=TestClient(app)
+    return client_
 
+# Fixture for direct DB access (CRUD tests)
+@pytest.fixture(scope="function")
+def db_session():
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
