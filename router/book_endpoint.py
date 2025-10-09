@@ -23,7 +23,7 @@ def create_book(book: schemas.BookCreate, db: Session = Depends(get_db)):
         
 
 # Get a book by ID
-@router.get("/books/{book_id}", response_model=schemas.Book)
+@router.get("/books/{book_id}")
 def read_book(book_id: int, db: Session = Depends(get_db)):
     try:
         db_book = book_crud.get_book(db, book_id=book_id)
@@ -35,7 +35,7 @@ def read_book(book_id: int, db: Session = Depends(get_db)):
         return JSONResponse(status_code=500,content=f'error due to {e}')
     
 # Get all books
-@router.get("/books/", response_model=list[schemas.Book])
+@router.get("/books/")
 def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         books = book_crud.get_books(db, skip=skip, limit=limit)

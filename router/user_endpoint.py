@@ -9,7 +9,7 @@ router2 = APIRouter(tags=['users'])
 
 
 
-@router2.get("/users/{user_id}", response_model=schemas.User)
+@router2.get("/users/{user_id}")
 def read_user(user_id: int, db: Session = Depends(get_db)):
     try:
         db_user = users_crud.get_user(db, user_id=user_id)
@@ -19,7 +19,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         return JSONResponse(status_code=500,content=f'erroe due to {e}')
 # Get all users
-@router2.get("/users/", response_model=list[schemas.User])
+@router2.get("/users/")
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         users = users_crud.get_users(db, skip=skip, limit=limit)

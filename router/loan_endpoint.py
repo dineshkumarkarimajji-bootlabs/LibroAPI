@@ -10,7 +10,7 @@ router3 = APIRouter(tags=["Loans"])
 
 
 # get all loans
-@router3.get("/loans/", response_model=list[schemas.Loan])
+@router3.get("/loans/")
 def read_loans(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         loans = Loans_crud.get_loans(db, skip=skip, limit=limit)
