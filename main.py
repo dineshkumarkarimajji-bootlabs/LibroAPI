@@ -4,7 +4,7 @@ from router.user_endpoint import router2
 from router.loan_endpoint import router3
 from router.audit_endpoint import router4
 
-app = FastAPI()
+app = FastAPI(title=("Library Management System"))
 
 
 app.include_router(router)
