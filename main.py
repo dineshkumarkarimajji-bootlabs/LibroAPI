@@ -1,8 +1,6 @@
 from fastapi import FastAPI
-from router.book_endpoint import router
-from router.user_endpoint import router2
-from router.loan_endpoint import router3
-from router.audit_endpoint import router4
+from router.main_endpoint import router,router2,router3,router4
+
 
 app = FastAPI(title=("Library Management System"))
 

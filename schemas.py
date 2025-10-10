@@ -1,9 +1,6 @@
 from pydantic import BaseModel, EmailStr
-# from datetime import date
-# import datetime
 from typing import Optional
 import datetime
-
 
 # -------------------- BOOK SCHEMAS --------------------
 class BookBase(BaseModel):
@@ -24,7 +21,7 @@ class Book(BookBase):
     available_copies: int
 
     class Config:
-        from_attributes = True
+        rom_attributes= True
 
 
 # -------------------- USER SCHEMAS --------------------
@@ -41,7 +38,7 @@ class User(UserBase):
     id: int
 
     class Config:
-        from_attributes = True
+        rom_attributes = True
 
 
 # -------------------- LOAN SCHEMAS --------------------
@@ -66,7 +63,7 @@ class Loan(LoanBase):
     user: Optional[User] = None
 
     class Config:
-        from_attributes = True
+        rom_attributes = True
 
 
 # -------------------- ACTION SCHEMAS --------------------

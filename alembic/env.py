@@ -2,35 +2,33 @@ import os
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
-from dotenv import load_dotenv
+from model import Base  # Import your SQLAlchemy Base here
 
-load_dotenv()  # load .env
-
+# Alembic Config object
 config = context.config
 
-# Override sqlalchemy.url with DATABASE_URL from .env
-database_url = os.getenv("DATABASE_URL")
-if database_url:
-    config.set_main_option("sqlalchemy.url", database_url)
+# Use DATABASE_URL from environment variable
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:Dinesh2003@localhost:5433/karimajjidineshkumar")
 
-fileConfig(config.config_file_name)
-
-# Import your Base from model.py
-from model import Base  # <-- your models.py (or model.py) should import Base and define tables
+# Target metadata for 'autogenerate'
 target_metadata = Base.metadata
 
 def run_migrations_offline():
-    url = config.get_main_option("sqlalchemy.url")
-    context.configure(url=url, target_metadata=target_metadata, literal_binds=True)
+    context.configure(
+        url=DATABASE_URL,
+        target_metadata=target_metadata,
+        literal_binds=True
+    )
     with context.begin_transaction():
         context.run_migrations()
 
 def run_migrations_online():
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
+        {"sqlalchemy.url": DATABASE_URL},  # Pass URL here
+        prefix='sqlalchemy.',
+        poolclass=pool.NullPool
     )
+
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
         with context.begin_transaction():
