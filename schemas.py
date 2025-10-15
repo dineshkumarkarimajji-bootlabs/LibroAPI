@@ -1,6 +1,8 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr
 from typing import Optional
 import datetime
+from pydantic import ConfigDict
+from model import Roles
 
 # -------------------- BOOK SCHEMAS --------------------
 class BookBase(BaseModel):
@@ -10,35 +12,40 @@ class BookBase(BaseModel):
     publication_year: int
     total_copies: int
 
-
 class BookCreate(BookBase):
-    # available_copies should be set in API, not provided by user
     pass
-
 
 class Book(BookBase):
     id: int
     available_copies: int
 
-    class Config:
-        rom_attributes= True
+    model_config = ConfigDict(from_attributes=True)  # ✅ Pydantic v2
 
 
 # -------------------- USER SCHEMAS --------------------
 class UserBase(BaseModel):
     name: str
     email: EmailStr
-
+    role: Roles = Roles.USER
 
 class UserCreate(UserBase):
-    pass
-
+    password: constr(min_length=6, max_length=72)
 
 class User(UserBase):
     id: int
 
-    class Config:
-        rom_attributes = True
+    model_config = ConfigDict(from_attributes=True)  # ✅ Pydantic v2
+
+
+# -------------------- AUTH SCHEMAS --------------------
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
+    role: Optional[Roles] = None
+    id: Optional[int] = None
 
 
 # -------------------- LOAN SCHEMAS --------------------
@@ -50,26 +57,21 @@ class LoanBase(BaseModel):
     return_date: Optional[datetime.datetime] = None
     status: Optional[str] = None
 
-
 class LoanCreate(BaseModel):
     book_id: int
     user_id: int
 
-
 class Loan(LoanBase):
     id: int
-    # Optional: include nested details
     book: Optional[Book] = None
     user: Optional[User] = None
 
-    class Config:
-        rom_attributes = True
+    model_config = ConfigDict(from_attributes=True)  # ✅ Pydantic v2
 
 
 # -------------------- ACTION SCHEMAS --------------------
 class BookBorrowRequest(BaseModel):
     user_id: int
-
 
 class BookReturnRequest(BaseModel):
     loan_id: int

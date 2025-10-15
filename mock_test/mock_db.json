@@ -1,0 +1,30 @@
+{
+    "books": [
+        {
+            "title": "Test Book3",
+            "author": "Author",
+            "isbn": "isbn03",
+            "publication_year": 2020,
+            "total_copies": 2,
+            "available_copies": 2,
+            "id": 1
+        }
+    ],
+    "users": [
+        {
+            "name": "admin",
+            "email": "a@b.com",
+            "hashed_password": "$2b$12$MBHpKP39T4jxhZKAqH6HCOdekSGE3Ly9yKCLsPZrrLCJT/FxEvc6q",
+            "role": "admin",
+            "id": 1
+        }
+    ],
+    "loans": [
+        {
+            "user_id": 1,
+            "book_id": 1,
+            "status": "RETURNED",
+            "id": 1
+        }
+    ]
+}

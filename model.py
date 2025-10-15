@@ -12,6 +12,10 @@ class LoanStatus(pyEnum):
     RETURNED = "returned"
     OVERDUE = "overdue"
 
+class Roles(pyEnum):
+    USER="user"
+    ADMIN="admin"
+
 # Book Table
 class Book(Base):
     __tablename__ = "books"
@@ -35,11 +39,15 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    is_deleted = Column(Boolean, default=False)  # Changed to Boolean
-    is_admin = Column(Boolean, default=False)
+    hashed_password = Column(String, nullable=False)  # <-- add this
+    is_deleted = Column(Boolean, default=False)
+    role = Column(SAEnum(Roles), default=Roles.USER, nullable=False)
 
     # Relationship: One user can have many loans
     loans = relationship("Loan", back_populates="user")
+
+    def is_admin(self):
+        return self.role == Roles.ADMIN
 
 # Loan Table
 class Loan(Base):
@@ -53,6 +61,9 @@ class Loan(Base):
     return_date = Column(DateTime(timezone=True), nullable=True)
     status = Column(SAEnum(LoanStatus), default=LoanStatus.BORROWED, nullable=False)
     is_deleted = Column(Boolean, default=False)  # Changed to Boolean
+    def is_admin(self):
+        return self.role == Roles.ADMIN
+
 
     # Relationships
     user = relationship("User", back_populates="loans")
