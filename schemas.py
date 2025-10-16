@@ -19,7 +19,7 @@ class Book(BookBase):
     id: int
     available_copies: int
 
-    model_config = ConfigDict(from_attributes=True)  # ✅ Pydantic v2
+    model_config = ConfigDict(from_attributes=True)  
 
 
 # -------------------- USER SCHEMAS --------------------

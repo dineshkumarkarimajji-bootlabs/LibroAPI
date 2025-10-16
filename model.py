@@ -39,7 +39,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    hashed_password = Column(String, nullable=False)  # <-- add this
+    hashed_password = Column(String, nullable=False)  # Store hashed passwords
     is_deleted = Column(Boolean, default=False)
     role = Column(SAEnum(Roles), default=Roles.USER, nullable=False)
 

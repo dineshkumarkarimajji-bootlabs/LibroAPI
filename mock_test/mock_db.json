@@ -14,7 +14,7 @@
         {
             "name": "admin",
             "email": "a@b.com",
-            "hashed_password": "$2b$12$MBHpKP39T4jxhZKAqH6HCOdekSGE3Ly9yKCLsPZrrLCJT/FxEvc6q",
+            "hashed_password": "$2b$12$.Gzg1MXw2aNXGL2QGelowu.tunXZA1whgV8wih29hIbNQnQU4zINe",
             "role": "admin",
             "id": 1
         }

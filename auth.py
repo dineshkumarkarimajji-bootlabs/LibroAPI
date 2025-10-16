@@ -18,18 +18,14 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # -------------------- Hashing Password --------------------
 def get_password_hash(password: str) -> str:
-    """
-    Hash the password using bcrypt safely.
-    Truncate to 72 bytes to avoid bcrypt limit issues.
-    """
+    # Hash the password using bcrypt safely.
+    # Truncate to 72 bytes to avoid bcrypt limit issues.
     password_bytes = password.encode("utf-8")[:72]
     return pwd_context.hash(password_bytes)
 
 # -------------------- Verifying Password --------------------
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """
-    Verify the provided plain password against the hashed password.
-    """
+    # Verify the provided plain password against the hashed password.
     plain_bytes = plain_password.encode("utf-8")[:72]
     return pwd_context.verify(plain_bytes, hashed_password)
 

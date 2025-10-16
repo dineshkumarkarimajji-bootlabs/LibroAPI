@@ -1,4 +1,14 @@
-from mock_conftest import MockDB
+from mock_conftest import MockDB,MOCK_FILE
+import os
+
+if os.path.exists(MOCK_FILE):
+    os.remove(MOCK_FILE)
+else:
+    db = MockDB(MOCK_FILE)
+    db.db = {"books": [], "users": [], "loans": []}
+    db.save()
+    print(db.db)
+
 
 def test_add_book():
     db = MockDB()
@@ -57,4 +67,6 @@ def test_return_loan():
     books = db.query("books").all()
     book_after = next(b for b in books if b["id"] == book["id"])
     assert book_after["available_copies"] == book["total_copies"]
+
+    
 
