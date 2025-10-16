@@ -1,78 +1,89 @@
 📚 LibroAPI – Transactional Library Management System
-# 1. Project Overview
+
+1. Project Overview
 
 LibroAPI is a RESTful backend API for managing a community library’s book catalog and loan operations. The API ensures transactional integrity for critical operations like borrowing and returning books, preventing inconsistencies such as multiple users borrowing the last copy simultaneously.
 
-Use-Case:
+Use Case:
+
 The local library needed a reliable digital system for:
 
-* Managing book catalog (CRUD)
+Managing book catalog (CRUD)
 
-* Registering and managing users
+Registering and managing users
 
-* Borrowing and returning books
+Borrowing and returning books
 
-* Tracking overdue loans
+Tracking overdue loans
 
-* Maintaining an audit trail
+Maintaining an audit trail
 
 Core Challenge:
+
 Ensuring data consistency across interdependent operations using ACID-compliant database transactions.
+2. Features
 
-# 2. Features
+Book Management (CRUD):
 
- Book Management (CRUD):
- 
-* Create, read, update, soft-delete books
+Create, read, update, soft-delete books
 
-* Track total and available copies
+Track total and available copies
 
 User Management:
 
-* Create and read library members
+Create and read library members
 
-* Soft-delete inactive users
+Soft-delete inactive users
 
 Loan Management:
 
-* Borrow books (transactionally decreases available copies)
+Borrow books (transactionally decreases available copies)
 
-* Return books (transactionally increases available copies)
+Return books (transactionally increases available copies)
 
-* Track overdue loans
+Track overdue loans
 
 Audit Logging:
 
-* Snapshot of total users, books, loans, and active/inactive statuses
-
+Snapshot of total users, books, loans, and active/inactive statuses
 Soft Deletion:
 
-* Marks books, users, and loans as deleted without removing them from the database
-
+Marks books, users, and loans as deleted without removing them from the database
 Transactional Integrity:
 
-* Borrow and return operations succeed or fail together
+Borrow and return operations succeed or fail together
 
-* Prevents race conditions using pessimistic locking
+Prevents race conditions using pessimistic locking
 
-# 3. Technologies Used
+Authentication & Authorization (Swagger UI):
 
-* Backend: Python 3.10+, FastAPI
+JWT-based Authentication (Bearer token) implemented for secure access
 
-* ORM & Database: SQLAlchemy, PostgreSQL
+Role-based Authorization (Admin/User) controls endpoint access
 
-* Database Adapter: psycopg2-binary
+Swagger UI allows logging in and testing endpoints with access tokens
 
-* Migrations: Alembic
+3. Technologies Used
 
-* Data Validation: Pydantic
+Backend: Python 3.10+, FastAPI
 
-* Testing: pytest, httpx, TestClient
+ORM & Database: SQLAlchemy, PostgreSQL
 
-* Environment Management: python-dotenv
+Database Adapter: psycopg2-binary
 
-# 4. Project Setup
-## 4.1 Prerequisites
+Migrations: Alembic
+
+Data Validation: Pydantic
+
+Authentication: JWT (python-jose), Password hashing (passlib)
+
+Testing: pytest, httpx, TestClient
+
+Environment Management: python-dotenv
+
+4. Project Setup
+
+4.1 Prerequisites
 
 Python 3.10+
 
@@ -80,139 +91,189 @@ PostgreSQL running locally or via Docker
 
 Example Docker command:
 
-* $ docker run --name libro-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
+$ docker run --name libro-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
 
-## 4.2 Clone & Install Dependencies
-* $ git clone https://github.com/dineshkumarkarimajji-bootlabs/LibroAPI.git
-* $ cd LibroAPI
-* $ python3 -m venv venv
-* $ source venv/bin/activate  # Windows: venv\Scripts\activate
-* $ pip install -r requirements.txt
+4.2 Clone & Install Dependencies
 
-## 4.3 Environment Variables
+$ git clone https://github.com/dineshkumarkarimajji-bootlabs/LibroAPI.git $ cd LibroAPI $ python3 -m venv venv $ source venv/bin/activate # Windows: venv\Scripts\activate $ pip install -r requirements.txt
+
+4.3 Environment Variables
 
 Create a .env file in the project root:
 
-* DATABASE_URL=postgresql://username:password@localhost:5432/librodb
+DATABASE_URL=postgresql://username:password@localhost:5432/librodb
+SECRET_KEY=
+4.4 Database Setup
 
-## 4.4 Database Setup
-
-Create SQLAlchemy engine, SessionLocal, and Base.
+Create SQLAlchemy engine, SessionLocal, and Base
 
 Run Alembic migrations:
 
-* $alembic upgrade head
+$ alembic upgrade head
 
-# 5. API Endpoints
-## 5.1 Books
-Method	Endpoint	Description
-* POST	/books/	Create a new book
+5. API Endpoints
 
-* GET	/books/{book_id}	Get a specific book
+5.1 Books
 
-* GET	/books/	List all books (pagination supported)
+Method Endpoint Description
 
-* PUT	/books/{book_id}	Update book details
+POST /books/ Create a new book
 
-* DELETE	/books/{book_id}	Soft delete a book
+GET /books/{book_id} Get a specific book
 
-* POST	/books/{book_id}/borrow	Borrow a book (transactional)
+GET /books/ List all books (pagination supported)
 
-## 5.2 Users
+PUT /books/{book_id} Update book details
 
-Method	Endpoint	Description
+DELETE /books/{book_id} Soft delete a book
 
-* POST	/users/	Create a new user
+POST /books/{book_id}/borrow Borrow a book (transactional)
 
-* GET	/users/{user_id}	Get user by ID
+5.2 Users
 
-* GET	/users/	List all users
+Method Endpoint Description
 
-* DELETE	/users/{user_id}	Soft delete a user
+POST /users/ Create a new user
 
-## 5.3 Loans
+GET /users/{user_id} Get user by ID
 
-Method	Endpoint	Description
+GET /users/ List all users
 
-* GET	/loans/	List loans (filterable)
+DELETE /users/{user_id} Soft delete a user
 
-* GET	/loans/{loan_id}	Get loan by ID
+5.3 Loans
 
-* POST	/loans/{loan_id}/return	Return a borrowed book (transactional)
+Method Endpoint Description
 
-* DELETE	/loans/{loan_id}	Soft delete a loan
+GET /loans/ List loans (filterable)
 
-## 5.4 Audit
+GET /loans/{loan_id} Get loan by ID
 
-Method	Endpoint	Description
+POST /loans/{loan_id}/return Return a borrowed book (transactional)
 
-* GET	/audit/	Create and view audit records
+DELETE /loans/{loan_id} Soft delete a loan
 
-# 6. Testing
-   
-## 6.1 Setup
+5.4 Audit
 
-* Tests use in-memory SQLite for isolation and speed
+Method Endpoint Description
 
-* conftest.py provides test database sessions and FastAPI TestClient
+GET /audit/ Create and view audit records
 
-## 6.2 Run Tests
+6. Testing
 
-pytest
+6.1 Setup
+
+Tests use in-memory SQLite for isolation and speed
+
+conftest.py provides test database sessions and FastAPI TestClient
+
+6.2 Run Tests
+
+$ pytest
 
 Testing covers:
 
-* CRUD operations for books, users, and loans
+CRUD operations for books, users, and loans
 
-* Borrow/return transactions
+Borrow/return transactions
 
-* Error handling and rollback
+Error handling and rollback
 
-* API endpoint integration tests
+API endpoint integration tests
 
-# 7. Manual Testing
+7. Manual Testing & Swagger UI
 
 Run the FastAPI server:
 
-* $ uvicorn app.main:app --reload
-
+$ uvicorn app.main:app --reload
 
 Open Swagger UI: http://127.0.0.1:8000/docs
+Steps to test with Authentication & Authorization:
 
-Test the full workflow:
+Login with a registered user (POST /login) to receive a JWT token.
 
-* Create books and users
+Click Authorize in Swagger UI and paste the token as Bearer .
 
-* Borrow a book → observe available_copies decrement
+Test endpoints according to roles:
 
-* Return a book → observe available_copies increment
+Admin-only endpoints: Soft delete books/users, audit logs
 
-* Soft delete a book or user
+User endpoints: Borrow/return books
 
-* Track overdue loans
+Observe transaction effects (available copies, loan history).
 
-# 8. Key Learning Outcomes
+Workflow Example:
 
-* Implemented transactional integrity to prevent inconsistencies
+Create books and users
 
-* Learned CRUD API development with FastAPI and SQLAlchemy
+Borrow a book → available_copies decrements
 
-* Handled concurrency with database locks
+Return a book → available_copies increments
 
-* Applied Pydantic for data validation
+Soft delete a book or user (Admin)
 
-* Managed environment variables securely
+Track overdue loans
 
-* Conducted unit and integration testing to ensure reliability
+🔐 Authentication & Authorization Flow
 
-# 9. Self-Reflection
+flowchart TD
+
+A[User Login (POST /login)] --> B[Server validates credentials]
+
+B --> C{Credentials valid?}
+
+C -- No --> D[Return 401 Unauthorized]
+
+C -- Yes --> E[Create JWT Token (access_token)]
+
+E --> F[Return token to client]
+
+subgraph Client
+
+G[Swagger UI / Frontend]
+
+G --> H[Attach JWT in Authorization header: Bearer ]
+
+end
+
+H --> I[API Endpoint (Protected)]
+
+I --> J{Role check}
+
+J -- Admin only --> K[Allow if Admin, else 403 Forbidden]
+
+J -- User / Admin --> L[Allow access]
+
+K --> M[Perform requested action (CRUD / Borrow / Return)]
+
+L --> M
+
+8. Key Learning Outcomes
+
+Implemented transactional integrity to prevent inconsistencies
+
+Learned CRUD API development with FastAPI and SQLAlchemy
+
+Handled concurrency with database locks
+
+Applied Pydantic for data validation
+
+Implemented JWT authentication and role-based authorization
+
+Managed environment variables securely
+
+Conducted unit and integration testing to ensure reliability
+
+9. Self-Reflection
 
 This project demonstrates how transactional operations can ensure data integrity in real-world applications. Borrowing and returning books are tightly coupled operations that must succeed or fail together. Implementing these operations helped me understand:
 
-* ACID transactions
+ACID transactions
 
-* Concurrency and race condition handling
+Concurrency and race condition handling
 
-* Structuring a maintainable FastAPI project
+Structuring a maintainable FastAPI project
 
-* Testing transactional logic
+JWT authentication and role-based authorization
+
+Testing transactional logic

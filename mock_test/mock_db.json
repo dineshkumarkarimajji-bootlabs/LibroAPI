@@ -1,30 +1,48 @@
 {
     "books": [
         {
-            "title": "Test Book3",
-            "author": "Author",
-            "isbn": "isbn03",
-            "publication_year": 2020,
+            "title": "test_book1",
+            "author": "abc",
+            "isbn": "isbn001",
+            "publication_year": 2000,
             "total_copies": 2,
-            "available_copies": 2,
+            "available_copies": 1,
             "id": 1
+        },
+        {
+            "title": "Test Book2",
+            "author": "Author",
+            "isbn": "isbn002",
+            "publication_year": 2025,
+            "total_copies": 2,
+            "id": 2,
+            "available_copies": 2
         }
     ],
     "users": [
         {
-            "name": "admin",
-            "email": "a@b.com",
-            "hashed_password": "$2b$12$.Gzg1MXw2aNXGL2QGelowu.tunXZA1whgV8wih29hIbNQnQU4zINe",
-            "role": "admin",
+            "name": "Dinesh",
+            "email": "dinesh@gmail.com",
             "id": 1
+        },
+        {
+            "name": "test",
+            "email": "test@gmail.com",
+            "id": 2
         }
     ],
     "loans": [
         {
-            "user_id": 1,
             "book_id": 1,
-            "status": "RETURNED",
+            "user_id": 1,
+            "status": "BORROWED",
             "id": 1
+        },
+        {
+            "book_id": 2,
+            "user_id": 2,
+            "status": "RETURNED",
+            "id": 2
         }
     ]
 }

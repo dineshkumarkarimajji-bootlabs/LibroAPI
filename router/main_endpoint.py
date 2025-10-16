@@ -6,7 +6,7 @@ from config import engine, get_db
 import schemas, model, auth
 from crud import main_crud
 # Routers
-router=APIRouter(tags=["LOGIN"])
+router=APIRouter(tags=["Login"])
 router1 = APIRouter(tags=["Users"])
 router2 = APIRouter(tags=["Books"])
 router3 = APIRouter(tags=["Loans"])
